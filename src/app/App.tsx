@@ -9,6 +9,7 @@ import { Testimonials } from "./components/Testimonials";
 import { QuoteForm } from "./components/QuoteForm";
 import { Footer } from "./components/Footer";
 import { ScrollProgress } from "./components/ScrollProgress";
+import { AppDialogProvider } from "./components/AppDialog";
 
 const AdminCatalog = lazy(() =>
   import("./components/AdminCatalog").then((module) => ({ default: module.AdminCatalog })),
@@ -28,36 +29,38 @@ export default function App() {
     return () => window.removeEventListener("hashchange", updateRoute);
   }, []);
 
+  let content;
+
   if (route === "#admin") {
-    return (
-      <Suspense fallback={<div className="admin-page">Cargando administración...</div>}>
+    content = (
+      <Suspense fallback={<div className="admin-page">Cargando administracion...</div>}>
         <AdminCatalog />
       </Suspense>
     );
-  }
-
-  if (route.startsWith("#resena")) {
-    return (
-      <Suspense fallback={<div className="review-page">Cargando formulario de reseña...</div>}>
+  } else if (route.startsWith("#resena")) {
+    content = (
+      <Suspense fallback={<div className="review-page">Cargando formulario de resena...</div>}>
         <ReviewForm />
       </Suspense>
     );
+  } else {
+    content = (
+      <div className="min-h-screen bg-background">
+        <ScrollProgress />
+        <Header />
+        <main>
+          <Hero />
+          <Catalog />
+          <HowItWorks />
+          <Gallery />
+          <InstagramFeed />
+          <Testimonials />
+          <QuoteForm />
+        </main>
+        <Footer />
+      </div>
+    );
   }
 
-  return (
-    <div className="min-h-screen bg-background">
-      <ScrollProgress />
-      <Header />
-      <main>
-        <Hero />
-        <Catalog />
-        <HowItWorks />
-        <Gallery />
-        <InstagramFeed />
-        <Testimonials />
-        <QuoteForm />
-      </main>
-      <Footer />
-    </div>
-  );
+  return <AppDialogProvider>{content}</AppDialogProvider>;
 }

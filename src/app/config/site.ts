@@ -3,8 +3,8 @@ export const siteConfig = {
   tagline: "Pastelería artesanal a medida",
   description:
     "Catálogo de pastelería artesanal premium con tortas, cupcakes, galletas y boxes dulces para cotizar por WhatsApp.",
-  whatsappNumber: "56912345678",
-  whatsappDisplay: "+56 9 1234 5678",
+  whatsappNumber: "56956664122",
+  whatsappDisplay: "+56 9 5666 4122",
   email: "@gmail.com",
   location: "Chillán, Chile",
   instagramHandle: "@_casa.dolce_",

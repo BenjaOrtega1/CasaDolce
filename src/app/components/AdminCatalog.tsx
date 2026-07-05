@@ -27,6 +27,7 @@ import {
 } from "../services/catalog";
 import { supabase } from "../lib/supabase";
 import { convertImageToWebp, slugify } from "../utils/images";
+import { useAppDialog } from "./AppDialog";
 
 type AdminPanel = "products" | "gallery" | "instagram" | "reviews";
 
@@ -187,6 +188,7 @@ function ReviewPreview({ review }: { review: CustomerReviewInput }) {
 }
 
 export function AdminCatalog() {
+  const dialog = useAppDialog();
   const [session, setSession] = useState<Session | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -570,7 +572,17 @@ export function AdminCatalog() {
     }
   }
   async function handleDeleteProduct(id?: number) {
-    if (!id || !confirm("Eliminar este producto?")) return;
+    if (
+      !id ||
+      !(await dialog.confirm({
+        title: "Eliminar producto",
+        description: "Esta accion quitara el producto del catalogo. No se puede deshacer.",
+        confirmLabel: "Eliminar producto",
+        tone: "danger",
+      }))
+    ) {
+      return;
+    }
     setLoading(true);
     setMessage("");
     try {
@@ -586,7 +598,17 @@ export function AdminCatalog() {
   }
 
   async function handleDeleteGalleryImage(id?: number) {
-    if (!id || !confirm("Eliminar esta imagen del carrusel?")) return;
+    if (
+      !id ||
+      !(await dialog.confirm({
+        title: "Eliminar imagen del carrusel",
+        description: "La imagen dejara de mostrarse en la galeria de sabores.",
+        confirmLabel: "Eliminar imagen",
+        tone: "danger",
+      }))
+    ) {
+      return;
+    }
     setLoading(true);
     setMessage("");
     try {
@@ -602,7 +624,17 @@ export function AdminCatalog() {
   }
 
   async function handleDeleteInstagramPost(id?: number) {
-    if (!id || !confirm("Eliminar esta publicacion de Instagram?")) return;
+    if (
+      !id ||
+      !(await dialog.confirm({
+        title: "Eliminar publicacion",
+        description: "Esta publicacion dejara de aparecer en el feed de Instagram de la web.",
+        confirmLabel: "Eliminar publicacion",
+        tone: "danger",
+      }))
+    ) {
+      return;
+    }
     setLoading(true);
     setMessage("");
     try {
@@ -618,7 +650,17 @@ export function AdminCatalog() {
   }
 
   async function handleDeleteReview(id?: number) {
-    if (!id || !confirm("Eliminar esta reseña?")) return;
+    if (
+      !id ||
+      !(await dialog.confirm({
+        title: "Eliminar resena",
+        description: "Esta resena dejara de mostrarse como testimonio en el sitio.",
+        confirmLabel: "Eliminar resena",
+        tone: "danger",
+      }))
+    ) {
+      return;
+    }
     setLoading(true);
     setMessage("");
     try {

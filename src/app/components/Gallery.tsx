@@ -101,7 +101,7 @@ export function Gallery() {
                 <img
                   src={activeImage.src}
                   alt={activeImage.alt}
-                  className="h-full w-full object-cover"
+                  className="flavor-carousel__feature-image"
                   loading="lazy"
                   onError={(event) => handleImageError(event, activeIndex)}
                 />

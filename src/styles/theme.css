@@ -420,6 +420,167 @@
     font-size: 1rem;
   }
 
+  .app-dialog__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    background:
+      radial-gradient(circle at 50% 20%, rgba(246, 201, 210, 0.3), transparent 34rem),
+      rgba(47, 33, 27, 0.48);
+    backdrop-filter: blur(10px);
+    animation: dialogOverlayIn 180ms ease-out;
+  }
+
+  .app-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 81;
+    display: grid;
+    width: min(calc(100vw - 2rem), 29rem);
+    gap: 0.85rem;
+    padding: 1.35rem;
+    border: 1px solid rgba(182, 61, 88, 0.18);
+    border-radius: 1rem;
+    color: var(--ink);
+    background: linear-gradient(180deg, rgba(255, 250, 244, 0.98), rgba(255, 240, 242, 0.98));
+    box-shadow: 0 24px 54px rgba(47, 33, 27, 0.26);
+    transform: translate(-50%, -50%);
+    animation: dialogPanelIn 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .app-dialog__brand {
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.68rem 0.3rem 0.36rem;
+    border: 1px solid rgba(199, 154, 47, 0.22);
+    border-radius: 999px;
+    color: var(--rose);
+    background: rgba(255, 255, 255, 0.66);
+    font-size: 0.78rem;
+    font-weight: 900;
+  }
+
+  .app-dialog__brand img {
+    width: 1.65rem;
+    height: 1.65rem;
+    object-fit: contain;
+  }
+
+  .app-dialog__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: inline-flex;
+    width: 2.2rem;
+    height: 2.2rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    color: var(--muted-foreground);
+    background: rgba(255, 255, 255, 0.56);
+    transition: transform 160ms ease, background 160ms ease, color 160ms ease;
+  }
+
+  .app-dialog__close:hover {
+    color: var(--rose);
+    background: white;
+    transform: translateY(-1px);
+  }
+
+  .app-dialog__icon {
+    display: inline-flex;
+    width: 2.8rem;
+    height: 2.8rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    color: var(--rose);
+    background: rgba(246, 201, 210, 0.54);
+  }
+
+  .app-dialog--danger .app-dialog__icon {
+    color: #9e2f45;
+    background: rgba(182, 61, 88, 0.13);
+  }
+
+  .app-dialog--success .app-dialog__icon {
+    color: var(--leaf);
+    background: rgba(104, 122, 74, 0.14);
+  }
+
+  .app-dialog__title {
+    margin: 0;
+    padding-right: 2rem;
+    color: var(--ink);
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.45rem, 4vw, 1.9rem);
+    line-height: 1.06;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  .app-dialog__description {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: 0.98rem;
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+
+  .app-dialog__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.65rem;
+    margin-top: 0.4rem;
+  }
+
+  .app-dialog__actions .btn-primary,
+  .app-dialog__actions .btn-secondary,
+  .app-dialog__danger-action {
+    min-width: 8.5rem;
+    padding-inline: 1.1rem;
+  }
+
+  .app-dialog__danger-action {
+    min-height: 2.65rem;
+    border: 0;
+    border-radius: 999px;
+    color: white;
+    background: linear-gradient(135deg, #b63d58, #7f2638);
+    font-weight: 900;
+    transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  }
+
+  .app-dialog__danger-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 22px rgba(127, 38, 56, 0.24);
+    background: linear-gradient(135deg, #c44862, #8e3045);
+  }
+
+  @keyframes dialogOverlayIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes dialogPanelIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, calc(-50% + 0.75rem)) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
   .hero-showcase {
     position: relative;
     isolation: isolate;
@@ -1099,16 +1260,17 @@
     box-shadow: 0 14px 30px rgba(72, 39, 28, 0.14);
   }
 
-  .flavor-carousel__feature img {
+  .flavor-carousel__feature-image {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: contain;
+    object-position: center;
     background: color-mix(in srgb, var(--blush) 78%, white);
     transition: transform 900ms ease;
   }
 
-  .flavor-carousel__feature:hover img {
+  .flavor-carousel__feature:hover .flavor-carousel__feature-image {
     transform: scale(1.012);
   }
 
@@ -2402,6 +2564,24 @@
     grid-template-columns: 1fr;
   }
 
+  .app-dialog {
+    align-content: start;
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+    padding: 1.15rem;
+  }
+
+  .app-dialog__actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .app-dialog__actions .btn-primary,
+  .app-dialog__actions .btn-secondary,
+  .app-dialog__danger-action {
+    width: 100%;
+  }
+
   .steps-grid {
     grid-template-columns: 1fr;
   }
@@ -2421,10 +2601,10 @@
   }
 
   .flavor-carousel__feature {
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 3 / 4;
     border-width: 7px;
     width: 100%;
-    min-height: 19rem;
+    min-height: 0;
   }
 
   .flavor-carousel__control {
