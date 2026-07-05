@@ -49,8 +49,8 @@ export function Gallery() {
     <section id="galeria" className="section-shell section-shell--gallery">
       <div className="section-inner">
         <motion.div
-          initial={{ opacity: 0, y: 22 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: -16 }}
+          whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           className="section-heading"

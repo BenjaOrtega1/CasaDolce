@@ -140,7 +140,7 @@ export function ReviewForm() {
     return (
       <main className="review-page">
         <section className="review-card review-card--compact">
-          <img src="/logocasadolce.png" alt={siteConfig.name} className="review-logo" />
+          <img src="/logocasadolce.webp" alt={siteConfig.name} className="review-logo" />
           <h1>Reseñas no disponibles</h1>
           <p>El formulario de reseñas no está disponible en este momento.</p>
         </section>
@@ -152,7 +152,7 @@ export function ReviewForm() {
     return (
       <main className="review-page">
         <section className="review-card review-card--compact">
-          <img src="/logocasadolce.png" alt={siteConfig.name} className="review-logo" />
+          <img src="/logocasadolce.webp" alt={siteConfig.name} className="review-logo" />
           <h1>Validando link</h1>
           <p>Estamos revisando que esta invitación de reseña esté disponible.</p>
         </section>
@@ -164,7 +164,7 @@ export function ReviewForm() {
     return (
       <main className="review-page">
         <section className="review-card review-card--compact">
-          <img src="/logocasadolce.png" alt={siteConfig.name} className="review-logo" />
+          <img src="/logocasadolce.webp" alt={siteConfig.name} className="review-logo" />
           <h1>Link no disponible</h1>
           <p>Esta invitación ya fue usada, venció o no corresponde a un pedido activo.</p>
         </section>
@@ -181,7 +181,7 @@ export function ReviewForm() {
         className="review-card"
       >
         <div className="review-card__intro">
-          <img src="/logocasadolce.png" alt={siteConfig.name} className="review-logo" />
+          <img src="/logocasadolce.webp" alt={siteConfig.name} className="review-logo" />
           <span>Casa Dolce</span>
           <h1>Cuéntanos cómo estuvo tu pedido</h1>
           <p>

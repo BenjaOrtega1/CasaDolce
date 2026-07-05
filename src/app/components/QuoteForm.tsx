@@ -76,7 +76,7 @@ export function QuoteForm() {
     <section id="cotizar" className="section-shell section-shell--quote">
       <div className="section-inner section-inner--narrow">
         <motion.div
-          initial={{ opacity: 0, y: 22 }}
+          initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}

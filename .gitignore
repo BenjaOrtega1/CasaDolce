@@ -2,3 +2,7 @@
 .env.local
 dist
 node_modules
+PROMPT_CLAUDE_OPUS_MEJORAR_ESTETICA.md
+Instagram
+!public/instagram/
+!public/instagram/*.webp

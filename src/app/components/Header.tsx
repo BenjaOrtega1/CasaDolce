@@ -51,7 +51,7 @@ export function Header() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.48, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
           >
-            <img src="/logocasadolce.png" alt="Casa Dolce" className="brand-logo brand-logo--header" />
+            <img src="/logocasadolce.webp" alt="Casa Dolce" className="brand-logo brand-logo--header" />
             <span className="brand-mark__text" aria-hidden="true">
               <span>Casa Dolce</span>
               <small>Pastelería artesanal</small>

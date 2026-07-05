@@ -3,10 +3,10 @@ export const siteConfig = {
   tagline: "Pastelería artesanal a medida",
   description:
     "Catálogo de pastelería artesanal premium con tortas, cupcakes, galletas y boxes dulces para cotizar por WhatsApp.",
-  whatsappNumber: "5491112345678",
-  whatsappDisplay: "+54 9 11 1234-5678",
-  email: "hola@casadolce.com",
-  location: "Palermo, Buenos Aires, Argentina",
+  whatsappNumber: "56912345678",
+  whatsappDisplay: "+56 9 1234 5678",
+  email: "@gmail.com",
+  location: "Chillán, Chile",
   instagramHandle: "@_casa.dolce_",
   instagramUrl: "https://www.instagram.com/_casa.dolce_/",
   social: {

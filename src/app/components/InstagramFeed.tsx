@@ -36,13 +36,13 @@ export function InstagramFeed() {
     <section id="instagram" className="section-shell section-shell--instagram">
       <div className="section-inner">
         <motion.div
-          initial={{ opacity: 0, y: 22 }}
+          initial={{ opacity: 0.6, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           className="instagram-heading"
         >
-          <p>SIGUENOS EN INSTAGRAM</p>
+          <p style={{ fontFamily: "Nunito, sans-serif", fontWeight: 800, letterSpacing: "0.16em" }}>SIGUENOS EN INSTAGRAM</p>
           <a
             href={siteConfig.instagramUrl}
             target="_blank"

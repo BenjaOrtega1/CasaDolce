@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { ArrowRight, MessageCircle, Sparkles } from "lucide-react";
+import { ArrowRight, CakeSlice, MessageCircle } from "lucide-react";
 import { Button } from "./ui/button";
 import { buildWhatsAppUrl, siteConfig } from "../config/site";
 
@@ -26,7 +26,7 @@ export function Hero() {
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
         >
           <p className="hero-showcase__badge">
-            <Sparkles className="size-4" aria-hidden="true" />
+            <CakeSlice className="size-4" aria-hidden="true" />
             Pastelería artesanal
           </p>
           <h1 id="hero-title">
@@ -66,7 +66,7 @@ export function Hero() {
         >
           <div className="hero-vitrine__frame">
             <img
-              src="/instagram/post-02.jpg"
+              src="/instagram/post-02.webp"
               alt="Torta artesanal Casa Dolce con frutos rojos y crema"
               className="hero-vitrine__image"
               width="900"
@@ -81,7 +81,7 @@ export function Hero() {
           </div>
 
           <div className="hero-vitrine__seal" aria-hidden="true">
-            <img src="/logocasadolce-icon.png" alt="" />
+            <img src="/logocasadolce-icon.webp" alt="" />
           </div>
 
           <div className="hero-vitrine__cards" aria-hidden="true">

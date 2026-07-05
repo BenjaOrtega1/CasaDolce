@@ -1,10 +1,10 @@
 import { motion } from "motion/react";
-import { CalendarHeart, ClipboardCheck, MessageCircleHeart, Sparkles } from "lucide-react";
+import { Cake, CalendarHeart, ClipboardCheck, MessageCircleHeart } from "lucide-react";
 import { buildWhatsAppUrl, siteConfig } from "../config/site";
 
 const steps = [
   {
-    icon: Sparkles,
+    icon: Cake,
     number: "01",
     title: "Inspírate",
     detail: "Catálogo",
@@ -42,8 +42,8 @@ export function HowItWorks() {
     <section id="como-funciona" className="section-shell section-shell--warm section-shell--process">
       <div className="section-inner">
         <motion.div
-          initial={{ opacity: 0, y: 22 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 20, scale: 0.98 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           className="section-heading"
@@ -68,6 +68,7 @@ export function HowItWorks() {
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.5, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
                 className="step-card"
+                style={{ minHeight: `${14 + i * 1.5}rem` }}
               >
                 <span className="step-card__number" aria-hidden="true">
                   {step.number}

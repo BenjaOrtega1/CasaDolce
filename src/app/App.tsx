@@ -8,6 +8,7 @@ import { InstagramFeed } from "./components/InstagramFeed";
 import { Testimonials } from "./components/Testimonials";
 import { QuoteForm } from "./components/QuoteForm";
 import { Footer } from "./components/Footer";
+import { ScrollProgress } from "./components/ScrollProgress";
 
 const AdminCatalog = lazy(() =>
   import("./components/AdminCatalog").then((module) => ({ default: module.AdminCatalog })),
@@ -45,6 +46,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-background">
+      <ScrollProgress />
       <Header />
       <main>
         <Hero />

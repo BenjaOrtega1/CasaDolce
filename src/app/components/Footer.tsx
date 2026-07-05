@@ -14,11 +14,10 @@ export function Footer() {
         <div className="footer__grid">
           <div>
             <div className="brand-mark brand-mark--footer">
-              <img src="/logocasadolce.png" alt="Casa Dolce" className="brand-logo brand-logo--footer" />
+              <img src="/logocasadolce.webp" alt="Casa Dolce" className="brand-logo brand-logo--footer" />
             </div>
             <p className="footer__copy">
-              Pastelería artesanal con mirada boutique. Creamos momentos dulces,
-              memorables y hechos a medida para tus celebraciones.
+              En Casa Dolce creemos que cada celebración merece una creación única. Elaboramos tortas y mesas dulces artesanales que combinan diseño, sabor y dedicación para hacer de cada ocasión un recuerdo inolvidable.
             </p>
             <div className="footer__social">
               <a href={siteConfig.instagramUrl} target="_blank" rel="noreferrer" aria-label="Instagram de Casa Dolce">
@@ -101,7 +100,7 @@ export function Footer() {
         </div>
 
         <div className="footer__bottom">
-          <p>© 2024 {siteConfig.name}. Todos los derechos reservados.</p>
+          <p>© 2026 {siteConfig.name}. Todos los derechos reservados.</p>
           <p>
             Hecho con <Heart className="size-3 fill-current" aria-hidden="true" /> para celebraciones memorables
           </p>

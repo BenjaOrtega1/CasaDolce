@@ -37,8 +37,8 @@ export function Testimonials() {
     <section id="testimonios" className="section-shell section-shell--ink">
       <div className="section-inner">
         <motion.div
-          initial={{ opacity: 0, y: 22 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 22, filter: "blur(4px)" }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           className="section-heading section-heading--dark"
@@ -64,7 +64,7 @@ export function Testimonials() {
               transition={{ duration: 0.58, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
               className="testimonial-card"
             >
-              <Quote className="testimonial-card__quote" aria-hidden="true" />
+              <Quote className="testimonial-card__quote size-12 opacity-40" aria-hidden="true" />
               {testimonial.image ? (
                 <img
                   src={testimonial.image}
@@ -99,8 +99,13 @@ export function Testimonials() {
 
         <div className="trust-row" aria-label="Atributos de servicio">
           {["Ingredientes naturales", "Empaque premium", "Cotización personalizada", "Coordinación por WhatsApp"].map(
-            (item) => (
-              <span key={item}>{item}</span>
+            (item, idx) => (
+              <span 
+                key={item} 
+                className={idx === 0 ? "border-[rgba(199,154,47,0.32)] border rounded-full px-3 py-1" : ""}
+              >
+                {item}
+              </span>
             ),
           )}
         </div>

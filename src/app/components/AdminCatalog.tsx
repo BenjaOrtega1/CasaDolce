@@ -87,7 +87,7 @@ function textToTags(value: string) {
 }
 
 function ProductPreview({ product, tags }: { product: CatalogProductInput; tags: string[] }) {
-  const image = product.image || "/instagram/post-02.jpg";
+  const image = product.image || "/instagram/post-02.webp";
   const title = product.name || "Nombre del producto";
   const description =
     product.description || "Descripcion breve del producto, pensada para verse igual que en el catalogo digital.";
@@ -121,7 +121,7 @@ function ProductPreview({ product, tags }: { product: CatalogProductInput; tags:
 function GalleryPreview({ image }: { image: GalleryImageInput }) {
   return (
     <figure className="admin-gallery-preview">
-      <img src={image.src || "/instagram/post-02.jpg"} alt={image.alt || "Vista previa del carrusel"} />
+      <img src={image.src || "/instagram/post-02.webp"} alt={image.alt || "Vista previa del carrusel"} />
       <figcaption>
         <span>Casa Dolce</span>
         <strong>{image.alt || "Texto descriptivo de la imagen"}</strong>
@@ -140,7 +140,7 @@ function InstagramPreview({ post }: { post: InstagramPostInput }) {
       aria-label={post.caption || "Vista previa de publicacion de Instagram"}
     >
       <img
-        src={post.image || "/instagram/post-01.jpg"}
+        src={post.image || "/instagram/post-01.webp"}
         alt={post.alt || post.caption || "Publicacion de Instagram Casa Dolce"}
         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
@@ -637,7 +637,7 @@ export function AdminCatalog() {
     return (
       <main className="admin-page">
         <section className="admin-card admin-card--narrow">
-          <img src="/logocasadolce.png" alt="Casa Dolce" className="admin-logo" />
+          <img src="/logocasadolce.webp" alt="Casa Dolce" className="admin-logo" />
           <h1>Configura Supabase</h1>
           <p>
             Crea un archivo <code>.env</code> usando <code>.env.example</code> y agrega
@@ -652,7 +652,7 @@ export function AdminCatalog() {
     return (
       <main className="admin-page">
         <form className="admin-card admin-card--narrow" onSubmit={handleLogin}>
-          <img src="/logocasadolce.png" alt="Casa Dolce" className="admin-logo" />
+          <img src="/logocasadolce.webp" alt="Casa Dolce" className="admin-logo" />
           <h1>Administrar catalogo</h1>
           <p>Ingresa con el usuario creado en Supabase Auth.</p>
           <label>
