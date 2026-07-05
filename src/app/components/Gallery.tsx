@@ -1,15 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ChevronLeft, ChevronRight, Images } from "lucide-react";
-import { galleryImages as fallbackGalleryImages } from "./data/products";
 import type { GalleryImage } from "../services/catalog";
 
-function getFallbackImage(index: number) {
-  return fallbackGalleryImages[index % fallbackGalleryImages.length]?.src ?? "/instagram/post-02.webp";
-}
-
 export function Gallery() {
-  const [images, setImages] = useState<GalleryImage[]>(fallbackGalleryImages);
+  const [images, setImages] = useState<GalleryImage[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const reduceMotion = useReducedMotion();
   const activeImage = images[activeIndex] ?? images[0];
@@ -22,11 +17,11 @@ export function Gallery() {
       .then((module) => module.getPublicGalleryImages())
       .then((items) => {
         if (!mounted) return;
-        setImages(items.length ? items : fallbackGalleryImages);
+        setImages(items);
         setActiveIndex(0);
       })
       .catch(() => {
-        if (mounted) setImages(fallbackGalleryImages);
+        if (mounted) setImages([]);
       });
 
     return () => {
@@ -47,12 +42,13 @@ export function Gallery() {
     setActiveIndex((index + images.length) % images.length);
   }
 
-  function handleImageError(event: React.SyntheticEvent<HTMLImageElement>, index: number) {
-    const fallbackSrc = getFallbackImage(index);
-    const currentSrc = event.currentTarget.getAttribute("src");
-
-    if (currentSrc === fallbackSrc) return;
-    event.currentTarget.src = fallbackSrc;
+  function handleImageError(index: number) {
+    setImages((current) => {
+      const sourceIndex = index % current.length;
+      const nextImages = current.filter((_, itemIndex) => itemIndex !== sourceIndex);
+      setActiveIndex((currentIndex) => Math.min(currentIndex, Math.max(0, nextImages.length - 1)));
+      return nextImages;
+    });
   }
 
   if (!activeImage) return null;
@@ -71,14 +67,14 @@ export function Gallery() {
             <Images className="size-4" aria-hidden="true" />
             Creaciones recientes
           </p>
-          <h2>Galería de sabores</h2>
+          <h2>Galeria de sabores</h2>
           <p>
-            Texturas, flores, glasé y terminaciones delicadas para imaginar el estilo
-            de tu próximo pedido.
+            Texturas, flores, glace y terminaciones delicadas para imaginar el estilo
+            de tu proximo pedido.
           </p>
         </motion.div>
 
-        <div className="flavor-carousel" aria-label="Galería animada de sabores Casa Dolce">
+        <div className="flavor-carousel" aria-label="Galeria animada de sabores Casa Dolce">
           <div className="flavor-carousel__stage">
             <button
               type="button"
@@ -103,7 +99,7 @@ export function Gallery() {
                   alt={activeImage.alt}
                   className="flavor-carousel__feature-image"
                   loading="lazy"
-                  onError={(event) => handleImageError(event, activeIndex)}
+                  onError={() => handleImageError(activeIndex)}
                 />
                 <figcaption>
                   <span>Casa Dolce</span>
@@ -122,25 +118,11 @@ export function Gallery() {
             </button>
           </div>
 
-          <div className="flavor-carousel__thumbs" aria-label="Seleccionar imagen de galería">
-            {images.map((image, index) => (
-              <button
-                key={image.id}
-                type="button"
-                className={`flavor-carousel__thumb ${index === activeIndex ? "is-active" : ""}`}
-                onClick={() => goTo(index)}
-                aria-label={`Ver ${image.alt}`}
-              >
-                <img src={image.src} alt="" loading="lazy" onError={(event) => handleImageError(event, index)} />
-              </button>
-            ))}
-          </div>
-
           <div className="flavor-marquee" aria-hidden="true">
             <div className="flavor-marquee__track">
               {marqueeImages.map((image, index) => (
                 <figure key={`${image.id}-${index}`}>
-                  <img src={image.src} alt="" loading="lazy" onError={(event) => handleImageError(event, index)} />
+                  <img src={image.src} alt="" loading="lazy" onError={() => handleImageError(index)} />
                 </figure>
               ))}
             </div>

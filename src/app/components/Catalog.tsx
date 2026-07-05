@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { MessageCircle, Tag } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { products as fallbackProducts, type Product } from "./data/products";
+import type { Product } from "./data/products";
 import { buildWhatsAppUrl } from "../config/site";
 
 function buildProductMessage(productName: string) {
@@ -11,7 +11,7 @@ function buildProductMessage(productName: string) {
 }
 
 export function Catalog() {
-  const [products, setProducts] = useState<Product[]>(fallbackProducts);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export function Catalog() {
         if (mounted) setProducts(items);
       })
       .catch(() => {
-        if (mounted) setProducts(fallbackProducts);
+        if (mounted) setProducts([]);
       })
       .finally(() => {
         if (mounted) setLoading(false);
@@ -57,7 +57,9 @@ export function Catalog() {
 
         {loading && <p className="catalog-status">Cargando catálogo...</p>}
 
-        <div className="product-grid">
+        {!loading && !products.length && <p className="catalog-status">Aun no hay productos publicados.</p>}
+
+        {products.length > 0 && <div className="product-grid">
           {products.map((product, i) => (
             <motion.article
               key={product.id}
@@ -104,7 +106,7 @@ export function Catalog() {
               </div>
             </motion.article>
           ))}
-        </div>
+        </div>}
       </div>
     </section>
   );

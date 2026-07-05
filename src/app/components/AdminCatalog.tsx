@@ -16,21 +16,25 @@ import {
   deleteProduct,
   deleteReview,
   getAdminGalleryImages,
+  getAdminHeroSettings,
   getAdminInstagramPosts,
   getAdminProducts,
   getAdminReviewInvites,
   getAdminReviews,
   saveGalleryImage,
+  saveHeroSettings,
   saveInstagramPost,
   saveProduct,
   saveReview,
 } from "../services/catalog";
 import { supabase } from "../lib/supabase";
+import { defaultHeroSettings, type HeroSettings } from "../config/hero";
 import { convertImageToWebp, slugify } from "../utils/images";
 import { useAppDialog } from "./AppDialog";
 
-type AdminPanel = "products" | "gallery" | "instagram" | "reviews";
+type AdminPanel = "hero" | "products" | "gallery" | "instagram" | "reviews";
 
+const HERO_IMAGE_BUCKET = "hero-images";
 const PRODUCT_IMAGE_BUCKET = "product-images";
 const GALLERY_IMAGE_BUCKET = "gallery-images";
 const INSTAGRAM_IMAGE_BUCKET = "instagram-posts";
@@ -187,12 +191,25 @@ function ReviewPreview({ review }: { review: CustomerReviewInput }) {
   );
 }
 
+function HeroPreview({ settings }: { settings: HeroSettings }) {
+  return (
+    <figure className="admin-gallery-preview">
+      <img src={settings.image || defaultHeroSettings.image} alt={settings.imageAlt || "Vista previa del hero"} />
+      <figcaption>
+        <span>{settings.captionLabel || defaultHeroSettings.captionLabel}</span>
+        <strong>{settings.captionTitle || defaultHeroSettings.captionTitle}</strong>
+      </figcaption>
+    </figure>
+  );
+}
+
 export function AdminCatalog() {
   const dialog = useAppDialog();
   const [session, setSession] = useState<Session | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [panel, setPanel] = useState<AdminPanel>("products");
+  const [panel, setPanel] = useState<AdminPanel>("hero");
+  const [heroForm, setHeroForm] = useState<HeroSettings>(defaultHeroSettings);
   const [products, setProducts] = useState<CatalogProductInput[]>([]);
   const [galleryImages, setGalleryImages] = useState<GalleryImageInput[]>([]);
   const [instagramPosts, setInstagramPosts] = useState<InstagramPostInput[]>([]);
@@ -229,6 +246,10 @@ export function AdminCatalog() {
   const selectedReview = useMemo(
     () => reviews.find((review) => review.id === selectedReviewId),
     [reviews, selectedReviewId],
+  );
+  const pendingReviewInvites = useMemo(
+    () => reviewInvites.filter((invite) => !invite.usedAt),
+    [reviewInvites],
   );
   const reviewBaseLink = useMemo(() => `${window.location.origin}${window.location.pathname}#resena`, []);
 
@@ -270,7 +291,8 @@ export function AdminCatalog() {
   async function refreshAll() {
     setLoading(true);
     setMessage("");
-    const [productResult, galleryResult, instagramResult, reviewResult, inviteResult] = await Promise.allSettled([
+    const [heroResult, productResult, galleryResult, instagramResult, reviewResult, inviteResult] = await Promise.allSettled([
+      getAdminHeroSettings(),
       getAdminProducts(),
       getAdminGalleryImages(),
       getAdminInstagramPosts(),
@@ -278,6 +300,7 @@ export function AdminCatalog() {
       getAdminReviewInvites(),
     ]);
 
+    if (heroResult.status === "fulfilled") setHeroForm(heroResult.value);
     if (productResult.status === "fulfilled") setProducts(productResult.value);
     if (galleryResult.status === "fulfilled") setGalleryImages(galleryResult.value);
     if (instagramResult.status === "fulfilled") setInstagramPosts(instagramResult.value);
@@ -285,7 +308,13 @@ export function AdminCatalog() {
     if (inviteResult.status === "fulfilled") setReviewInvites(inviteResult.value);
 
     const mainError =
-      productResult.status === "rejected" ? productResult.reason : galleryResult.status === "rejected" ? galleryResult.reason : null;
+      heroResult.status === "rejected"
+        ? heroResult.reason
+        : productResult.status === "rejected"
+          ? productResult.reason
+          : galleryResult.status === "rejected"
+            ? galleryResult.reason
+            : null;
     if (mainError) {
       setMessage(mainError instanceof Error ? mainError.message : "No se pudo cargar la informacion.");
     }
@@ -353,6 +382,32 @@ export function AdminCatalog() {
   function getDroppedImage(event: DragEvent<HTMLElement>) {
     event.preventDefault();
     return Array.from(event.dataTransfer.files).find((file) => file.type.startsWith("image/")) ?? null;
+  }
+
+  async function processHeroImage(file: File | null) {
+    if (!file) return;
+
+    setUploading(true);
+    setMessage("Subiendo imagen...");
+    try {
+      const url = await uploadWebp(file, HERO_IMAGE_BUCKET, heroForm.captionTitle || "hero");
+      setHeroForm((current) => ({
+        ...current,
+        image: url,
+        imageAlt: current.imageAlt || current.captionTitle || "Especialidad Casa Dolce",
+      }));
+      setMessage("Imagen del hero subida.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "No se pudo subir la imagen del hero.");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  async function handleHeroImageUpload(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0] ?? null;
+    event.target.value = "";
+    await processHeroImage(file);
   }
 
   async function processProductImage(file: File | null) {
@@ -459,6 +514,34 @@ export function AdminCatalog() {
     await processReviewImage(file);
   }
 
+  async function handleSaveHeroSettings(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setLoading(true);
+    setMessage("");
+
+    try {
+      await saveHeroSettings({
+        ...heroForm,
+        image: heroForm.image.trim() || defaultHeroSettings.image,
+        imageAlt: heroForm.imageAlt.trim() || defaultHeroSettings.imageAlt,
+        badge: heroForm.badge.trim() || defaultHeroSettings.badge,
+        title: heroForm.title.trim() || defaultHeroSettings.title,
+        lead: heroForm.lead.trim() || defaultHeroSettings.lead,
+        captionLabel: heroForm.captionLabel.trim() || defaultHeroSettings.captionLabel,
+        captionTitle: heroForm.captionTitle.trim() || defaultHeroSettings.captionTitle,
+        primaryCtaLabel: heroForm.primaryCtaLabel.trim() || defaultHeroSettings.primaryCtaLabel,
+        whatsappMessage: heroForm.whatsappMessage.trim() || defaultHeroSettings.whatsappMessage,
+        secondaryCtaLabel: heroForm.secondaryCtaLabel.trim() || defaultHeroSettings.secondaryCtaLabel,
+      });
+      setMessage("Hero guardado.");
+      await refreshAll();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "No se pudo guardar el hero.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function handleSaveProduct(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
@@ -527,7 +610,7 @@ export function AdminCatalog() {
         name: reviewForm.name.trim(),
         event: reviewForm.event.trim() || "Pedido Casa Dolce",
         text: reviewForm.text.trim(),
-        alt: reviewForm.alt.trim() || `Foto de pedido enviada por ${reviewForm.name}`,
+        alt: reviewForm.image.trim() ? reviewForm.alt.trim() || `Foto de pedido enviada por ${reviewForm.name}` : "",
       });
       setMessage("Reseña guardada.");
       startNewReview();
@@ -696,7 +779,7 @@ export function AdminCatalog() {
         <form className="admin-card admin-card--narrow" onSubmit={handleLogin}>
           <img src="/logocasadolce.webp" alt="Casa Dolce" className="admin-logo" />
           <h1>Administrar catalogo</h1>
-          <p>Ingresa con el usuario creado en Supabase Auth.</p>
+          <p></p>
           <label>
             Email
             <input value={email} onChange={(event) => setEmail(event.target.value)} type="email" required />
@@ -721,7 +804,9 @@ export function AdminCatalog() {
           <div>
             <p>Casa Dolce</p>
             <h1>
-              {panel === "products"
+              {panel === "hero"
+                ? "Hero principal"
+                : panel === "products"
                 ? "Catalogo digital"
                 : panel === "gallery"
                   ? "Carrusel de sabores"
@@ -743,6 +828,10 @@ export function AdminCatalog() {
         </header>
 
         <div className="admin-tabs" role="tablist" aria-label="Administracion Casa Dolce">
+          <button type="button" className={panel === "hero" ? "is-active" : ""} onClick={() => setPanel("hero")}>
+            <Star className="size-4" aria-hidden="true" />
+            Hero
+          </button>
           <button type="button" className={panel === "products" ? "is-active" : ""} onClick={() => setPanel("products")}>
             <Package className="size-4" aria-hidden="true" />
             Productos
@@ -760,6 +849,90 @@ export function AdminCatalog() {
             Reseñas
           </button>
         </div>
+
+        {panel === "hero" && (
+          <div className="admin-grid admin-grid--preview">
+            <form className="admin-form" onSubmit={handleSaveHeroSettings}>
+              <div className="admin-form__section">
+                <span>Imagen principal</span>
+                <label className="admin-upload" onDragOver={(event) => event.preventDefault()} onDrop={(event) => processHeroImage(getDroppedImage(event))}>
+                  <ImagePlus className="size-5" aria-hidden="true" />
+                  <strong>{uploading ? "Subiendo imagen..." : "Subir imagen"}</strong>
+                  <small>Hero / especialidad</small>
+                  <input type="file" accept="image/*" onChange={handleHeroImageUpload} disabled={uploading} />
+                </label>
+                <label>
+                  URL de imagen
+                  <input value={heroForm.image} onChange={(event) => setHeroForm({ ...heroForm, image: event.target.value })} required />
+                </label>
+                <label>
+                  Texto alt
+                  <input value={heroForm.imageAlt} onChange={(event) => setHeroForm({ ...heroForm, imageAlt: event.target.value })} />
+                </label>
+              </div>
+
+              <div className="admin-form__section">
+                <span>Contenido del hero</span>
+                <label>
+                  Etiqueta superior
+                  <input value={heroForm.badge} onChange={(event) => setHeroForm({ ...heroForm, badge: event.target.value })} required />
+                </label>
+                <label>
+                  Titulo
+                  <textarea value={heroForm.title} onChange={(event) => setHeroForm({ ...heroForm, title: event.target.value })} required />
+                </label>
+                <label>
+                  Bajada
+                  <textarea value={heroForm.lead} onChange={(event) => setHeroForm({ ...heroForm, lead: event.target.value })} required />
+                </label>
+              </div>
+
+              <div className="admin-form__section">
+                <span>Especial y llamados</span>
+                <div className="admin-form__row">
+                  <label>
+                    Etiqueta de imagen
+                    <input value={heroForm.captionLabel} onChange={(event) => setHeroForm({ ...heroForm, captionLabel: event.target.value })} required />
+                  </label>
+                  <label>
+                    Texto de imagen
+                    <input value={heroForm.captionTitle} onChange={(event) => setHeroForm({ ...heroForm, captionTitle: event.target.value })} required />
+                  </label>
+                </div>
+                <div className="admin-form__row">
+                  <label>
+                    Boton WhatsApp
+                    <input value={heroForm.primaryCtaLabel} onChange={(event) => setHeroForm({ ...heroForm, primaryCtaLabel: event.target.value })} required />
+                  </label>
+                  <label>
+                    Boton secundario
+                    <input value={heroForm.secondaryCtaLabel} onChange={(event) => setHeroForm({ ...heroForm, secondaryCtaLabel: event.target.value })} required />
+                  </label>
+                </div>
+                <label>
+                  Mensaje para WhatsApp
+                  <textarea value={heroForm.whatsappMessage} onChange={(event) => setHeroForm({ ...heroForm, whatsappMessage: event.target.value })} required />
+                </label>
+              </div>
+
+              {message && <p className="admin-message">{message}</p>}
+              <div className="admin-actions">
+                <Button className="btn-primary" type="submit" disabled={loading || uploading}>
+                  <Save className="size-4" aria-hidden="true" />
+                  Guardar hero
+                </Button>
+              </div>
+            </form>
+
+            <aside className="admin-preview">
+              <div className="admin-preview__header">
+                <span>Vista previa</span>
+                <p>Imagen y texto destacado del inicio.</p>
+              </div>
+              <HeroPreview settings={heroForm} />
+            </aside>
+          </div>
+        )}
 
         {panel === "products" && (
           <div className="admin-grid admin-grid--preview">
@@ -1125,15 +1298,32 @@ export function AdminCatalog() {
                   </Button>
                 </div>
                 <div className="admin-invite-list">
-                  {reviewInvites.slice(0, 6).map((invite) => {
+                  {pendingReviewInvites.length ? (
+                    pendingReviewInvites.slice(0, 8).map((invite) => {
                     const inviteLink = `${reviewBaseLink}?token=${invite.token}`;
                     return (
-                      <button type="button" key={invite.id} onClick={() => copyReviewLink(inviteLink)}>
-                        <span>{invite.customerName || "Invitación sin nombre"}</span>
-                        <small>{invite.usedAt ? "Usada" : "Disponible"}</small>
-                      </button>
+                      <article key={invite.id} className="admin-invite-item">
+                        <div>
+                          <strong>{invite.customerName || "Invitacion sin nombre"}</strong>
+                          <small>Disponible</small>
+                        </div>
+                        <input value={inviteLink} readOnly onFocus={(event) => event.currentTarget.select()} aria-label="Link pendiente de resena" />
+                        <div className="admin-invite-item__actions">
+                          <Button type="button" variant="outline" className="btn-secondary" onClick={() => copyReviewLink(inviteLink)}>
+                            <Copy className="size-4" aria-hidden="true" />
+                            Copiar
+                          </Button>
+                          <Button type="button" variant="outline" className="btn-secondary" onClick={() => window.open(inviteLink, "_blank")}>
+                            <Eye className="size-4" aria-hidden="true" />
+                            Abrir
+                          </Button>
+                        </div>
+                      </article>
                     );
-                  })}
+                    })
+                  ) : (
+                    <p className="admin-empty-note">No hay links pendientes sin usar.</p>
+                  )}
                 </div>
               </div>
 
@@ -1189,7 +1379,7 @@ export function AdminCatalog() {
                 </label>
                 <label>
                   URL de imagen
-                  <input value={reviewForm.image} onChange={(event) => setReviewForm({ ...reviewForm, image: event.target.value })} required />
+                  <input value={reviewForm.image} onChange={(event) => setReviewForm({ ...reviewForm, image: event.target.value })} />
                 </label>
                 <label>
                   Texto alt
@@ -1240,10 +1430,3 @@ export function AdminCatalog() {
     </main>
   );
 }
-
-
-
-
-
-
-

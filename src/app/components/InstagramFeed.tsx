@@ -1,19 +1,11 @@
-import { useEffect, useState, type SyntheticEvent } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { ExternalLink, Instagram } from "lucide-react";
 import { siteConfig } from "../config/site";
-import { instagramPosts as localInstagramPosts, type InstagramPost } from "./data/instagram";
-
-const FALLBACK_IMAGE =
-  "https://images.unsplash.com/photo-1565853457079-562afb49d09f?w=900&h=900&fit=crop&auto=format&q=82";
-
-function useFallbackImage(event: SyntheticEvent<HTMLImageElement>) {
-  event.currentTarget.onerror = null;
-  event.currentTarget.src = FALLBACK_IMAGE;
-}
+import type { InstagramPost } from "./data/instagram";
 
 export function InstagramFeed() {
-  const [posts, setPosts] = useState<InstagramPost[]>(localInstagramPosts);
+  const [posts, setPosts] = useState<InstagramPost[]>([]);
 
   useEffect(() => {
     let mounted = true;
@@ -21,10 +13,10 @@ export function InstagramFeed() {
     import("../services/catalog")
       .then((module) => module.getMergedInstagramPosts())
       .then((items) => {
-        if (mounted) setPosts(items.length ? items : localInstagramPosts);
+        if (mounted) setPosts(items);
       })
       .catch(() => {
-        if (mounted) setPosts(localInstagramPosts);
+        if (mounted) setPosts([]);
       });
 
     return () => {
@@ -54,7 +46,7 @@ export function InstagramFeed() {
           <span aria-hidden="true" />
         </motion.div>
 
-        <div className="instagram-grid">
+        {posts.length > 0 && <div className="instagram-grid">
           {posts.map((post, index) => (
             <motion.a
               key={`${post.id}-${post.postUrl}`}
@@ -73,7 +65,6 @@ export function InstagramFeed() {
                 alt={post.alt}
                 loading="lazy"
                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                onError={useFallbackImage}
               />
               <motion.div
                 className="instagram-post__overlay"
@@ -86,7 +77,7 @@ export function InstagramFeed() {
               </motion.div>
             </motion.a>
           ))}
-        </div>
+        </div>}
 
         <div className="instagram-cta">
           <a href={siteConfig.instagramUrl} target="_blank" rel="noreferrer" className="btn-primary inline-flex items-center gap-2 px-6">

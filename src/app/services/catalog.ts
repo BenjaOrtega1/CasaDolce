@@ -1,5 +1,6 @@
-import { instagramPosts as fallbackInstagramPosts, type InstagramPost } from "../components/data/instagram";
-import { galleryImages as fallbackGalleryImages, products as fallbackProducts, type Product } from "../components/data/products";
+import { instagramPosts as localInstagramPosts, type InstagramPost } from "../components/data/instagram";
+import type { Product } from "../components/data/products";
+import { defaultHeroSettings, type HeroSettings } from "../config/hero";
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
 
 export interface GalleryImage {
@@ -125,12 +126,28 @@ interface ReviewInviteRow {
   created_at: string;
 }
 
+interface HeroSettingsRow {
+  id: boolean;
+  image_url: string;
+  image_alt: string;
+  badge: string;
+  title: string;
+  lead: string;
+  caption_label: string;
+  caption_title: string;
+  primary_cta_label: string;
+  whatsapp_message: string;
+  secondary_cta_label: string;
+}
+
 const productColumns =
   "id,name,description,category,price_from,image_url,alt,tags,active,featured,sort_order";
 const galleryColumns = "id,image_url,alt,active,sort_order";
 const instagramColumns = "id,post_url,image_url,alt,caption,active,sort_order";
 const reviewColumns = "id,customer_name,event_name,review_text,rating,image_url,alt,active,sort_order";
 const reviewInviteColumns = "id,token,customer_name,used_at,expires_at,created_at";
+const heroSettingsColumns =
+  "id,image_url,image_alt,badge,title,lead,caption_label,caption_title,primary_cta_label,whatsapp_message,secondary_cta_label";
 
 function normalizeLocalImageUrl(url: string) {
   const trimmed = url.trim();
@@ -259,7 +276,7 @@ function reviewInputToRow(review: CustomerReviewInput) {
     review_text: review.text.trim(),
     rating: Math.min(5, Math.max(1, Number(review.rating) || 5)),
     image_url: review.image.trim(),
-    alt: review.alt.trim(),
+    alt: review.image.trim() ? review.alt.trim() : "",
     active: review.active,
     sort_order: Number.isFinite(review.sortOrder) ? review.sortOrder : 0,
   };
@@ -276,12 +293,43 @@ function reviewInviteRowToInvite(row: ReviewInviteRow): ReviewInvite {
   };
 }
 
+function heroRowToSettings(row: HeroSettingsRow): HeroSettings {
+  return {
+    image: normalizeLocalImageUrl(row.image_url),
+    imageAlt: row.image_alt,
+    badge: row.badge,
+    title: row.title,
+    lead: row.lead,
+    captionLabel: row.caption_label,
+    captionTitle: row.caption_title,
+    primaryCtaLabel: row.primary_cta_label,
+    whatsappMessage: row.whatsapp_message,
+    secondaryCtaLabel: row.secondary_cta_label,
+  };
+}
+
+function heroSettingsToRow(settings: HeroSettings) {
+  return {
+    id: true,
+    image_url: settings.image.trim(),
+    image_alt: settings.imageAlt.trim(),
+    badge: settings.badge.trim(),
+    title: settings.title.trim(),
+    lead: settings.lead.trim(),
+    caption_label: settings.captionLabel.trim(),
+    caption_title: settings.captionTitle.trim(),
+    primary_cta_label: settings.primaryCtaLabel.trim(),
+    whatsapp_message: settings.whatsappMessage.trim(),
+    secondary_cta_label: settings.secondaryCtaLabel.trim(),
+  };
+}
+
 export function hasCatalogBackend() {
   return isSupabaseConfigured && Boolean(supabase);
 }
 
 export async function getPublicProducts(): Promise<Product[]> {
-  if (!supabase) return fallbackProducts;
+  if (!supabase) return [];
 
   const { data, error } = await supabase
     .from("products")
@@ -291,11 +339,11 @@ export async function getPublicProducts(): Promise<Product[]> {
     .order("id", { ascending: true });
 
   if (error) {
-    console.warn("No se pudo cargar el catalogo desde Supabase. Usando datos locales.", error);
-    return fallbackProducts;
+    console.warn("No se pudo cargar el catalogo desde Supabase.", error);
+    return [];
   }
 
-  return data?.length ? (data as ProductRow[]).map(rowToProduct) : fallbackProducts;
+  return (data as ProductRow[]).map(rowToProduct);
 }
 
 export async function getAdminProducts(): Promise<CatalogProductInput[]> {
@@ -334,7 +382,7 @@ export async function deleteProduct(id: number) {
 }
 
 export async function getPublicGalleryImages(): Promise<GalleryImage[]> {
-  if (!supabase) return fallbackGalleryImages;
+  if (!supabase) return [];
 
   const { data, error } = await supabase
     .from("gallery_images")
@@ -344,11 +392,11 @@ export async function getPublicGalleryImages(): Promise<GalleryImage[]> {
     .order("id", { ascending: true });
 
   if (error) {
-    console.warn("No se pudo cargar la galeria desde Supabase. Usando imagenes locales.", error);
-    return fallbackGalleryImages;
+    console.warn("No se pudo cargar la galeria desde Supabase.", error);
+    return [];
   }
 
-  return data?.length ? (data as GalleryImageRow[]).map(galleryRowToImage) : fallbackGalleryImages;
+  return (data as GalleryImageRow[]).map(galleryRowToImage);
 }
 
 export async function getAdminGalleryImages(): Promise<GalleryImageInput[]> {
@@ -407,9 +455,39 @@ export async function getPublicInstagramPosts(): Promise<InstagramPost[]> {
 export async function getMergedInstagramPosts(): Promise<InstagramPost[]> {
   const remotePosts = await getPublicInstagramPosts();
   const remoteUrls = new Set(remotePosts.map((post) => post.postUrl.trim()));
-  const localPosts = fallbackInstagramPosts.filter((post) => !remoteUrls.has(post.postUrl.trim()));
+  const localPosts = localInstagramPosts.filter((post) => !remoteUrls.has(post.postUrl.trim()));
 
   return [...remotePosts, ...localPosts];
+}
+
+export async function getPublicHeroSettings(): Promise<HeroSettings> {
+  if (!supabase) return defaultHeroSettings;
+
+  const { data, error } = await supabase
+    .from("hero_settings")
+    .select(heroSettingsColumns)
+    .eq("id", true)
+    .maybeSingle();
+
+  if (error) {
+    console.warn("No se pudo cargar la configuracion del hero.", error);
+    return defaultHeroSettings;
+  }
+
+  return data ? heroRowToSettings(data as HeroSettingsRow) : defaultHeroSettings;
+}
+
+export async function getAdminHeroSettings(): Promise<HeroSettings> {
+  return getPublicHeroSettings();
+}
+
+export async function saveHeroSettings(settings: HeroSettings) {
+  if (!supabase) throw new Error("Supabase no esta configurado.");
+
+  const { error } = await supabase.from("hero_settings").upsert(heroSettingsToRow(settings), {
+    onConflict: "id",
+  });
+  if (error) throw error;
 }
 
 export async function getAdminInstagramPosts(): Promise<InstagramPostInput[]> {
@@ -512,7 +590,7 @@ export async function submitPublicReview(token: string, review: Omit<CustomerRev
     p_review_text: review.text.trim(),
     p_rating: Math.min(5, Math.max(1, Number(review.rating) || 5)),
     p_image_url: review.image.trim(),
-    p_alt: review.alt.trim(),
+    p_alt: review.image.trim() ? review.alt.trim() : "",
   });
   if (error) throw error;
 }

@@ -1245,14 +1245,14 @@
 
   .flavor-carousel__stage {
     position: relative;
-    width: min(100%, 58rem);
+    width: min(100%, 30rem);
     min-width: 0;
     margin: 0 auto;
   }
 
   .flavor-carousel__feature {
     position: relative;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 3 / 4;
     overflow: clip;
     border: 10px solid rgba(255, 250, 244, 0.9);
     border-radius: 1.05rem;
@@ -1264,14 +1264,14 @@
     display: block;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center;
     background: color-mix(in srgb, var(--blush) 78%, white);
     transition: transform 900ms ease;
   }
 
   .flavor-carousel__feature:hover .flavor-carousel__feature-image {
-    transform: scale(1.035);
+    transform: scale(1.012);
   }
 
   .flavor-carousel__feature figcaption {
@@ -1324,50 +1324,13 @@
   }
 
   .flavor-carousel__control--prev {
-    left: -1.2rem;
+    left: -1.35rem;
   }
 
   .flavor-carousel__control--next {
-    right: -1.2rem;
+    right: -1.35rem;
   }
 
-  .flavor-carousel__thumbs {
-    display: flex;
-    width: min(100%, 58rem);
-    min-width: 0;
-    justify-content: flex-start;
-    gap: 0.55rem;
-    overflow-x: auto;
-    margin-inline: auto;
-    padding: 0.25rem 0.15rem 0.45rem;
-    scrollbar-width: none;
-    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-  }
-
-  .flavor-carousel__thumbs::-webkit-scrollbar {
-    display: none;
-  }
-
-  .flavor-carousel__thumb {
-    width: clamp(3.8rem, 9vw, 5.8rem);
-    aspect-ratio: 1;
-    flex: 0 0 auto;
-    overflow: clip;
-    border: 2px solid transparent;
-    border-radius: 0.8rem;
-    background: var(--blush);
-    opacity: 0.64;
-    transition: opacity 180ms ease, transform 180ms ease, border-color 180ms ease;
-  }
-
-  .flavor-carousel__thumb:hover,
-  .flavor-carousel__thumb.is-active {
-    border-color: rgba(182, 61, 88, 0.38);
-    opacity: 1;
-    transform: translateY(-2px);
-  }
-
-  .flavor-carousel__thumb img,
   .flavor-marquee img {
     width: 100%;
     height: 100%;
@@ -2042,29 +2005,56 @@
 
   .admin-invite-list {
     display: grid;
-    gap: 0.45rem;
+    gap: 0.65rem;
   }
 
-  .admin-invite-list button {
+  .admin-invite-item {
+    display: grid;
+    gap: 0.55rem;
+    border: 1px solid rgba(83, 45, 32, 0.1);
+    border-radius: 0.72rem;
+    padding: 0.7rem;
+    color: var(--ink-2);
+    background: rgba(255, 255, 255, 0.62);
+  }
+
+  .admin-invite-item > div:first-child {
     display: flex;
-    min-height: 2.5rem;
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
-    border: 1px solid rgba(83, 45, 32, 0.1);
-    border-radius: 0.72rem;
-    padding: 0.55rem 0.7rem;
-    color: var(--ink-2);
-    background: rgba(255, 255, 255, 0.62);
-    font-size: 0.86rem;
-    font-weight: 900;
-    text-align: left;
   }
 
-  .admin-invite-list button:hover {
+  .admin-invite-item strong {
+    font-size: 0.88rem;
+    font-weight: 900;
+  }
+
+  .admin-invite-item:focus-within,
+  .admin-invite-item:hover {
     border-color: rgba(182, 61, 88, 0.18);
-    color: var(--rose);
     background: white;
+  }
+
+  .admin-invite-item input {
+    min-height: 2.45rem;
+    border: 1px solid rgba(83, 45, 32, 0.12);
+    border-radius: 0.62rem;
+    padding: 0.55rem 0.65rem;
+    color: var(--muted-foreground);
+    background: rgba(255, 250, 244, 0.7);
+    font-size: 0.8rem;
+  }
+
+  .admin-invite-item__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .admin-invite-item__actions .btn-secondary {
+    min-height: 2.35rem;
+    padding-inline: 0.85rem;
   }
 
   .admin-invite-list small {
@@ -2073,6 +2063,13 @@
     color: var(--muted-foreground);
     background: rgba(83, 45, 32, 0.08);
     font-size: 0.7rem;
+  }
+
+  .admin-empty-note {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: 0.9rem;
+    font-weight: 800;
   }
 
   .admin-message,
