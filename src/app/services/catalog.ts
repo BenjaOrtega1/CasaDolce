@@ -132,6 +132,12 @@ const instagramColumns = "id,post_url,image_url,alt,caption,active,sort_order";
 const reviewColumns = "id,customer_name,event_name,review_text,rating,image_url,alt,active,sort_order";
 const reviewInviteColumns = "id,token,customer_name,used_at,expires_at,created_at";
 
+function normalizeLocalImageUrl(url: string) {
+  const trimmed = url.trim();
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return trimmed.replace(/\.(png|jpe?g|gif|bmp|tiff?|svg|avif)(?=([?#].*)?$)/i, ".webp");
+}
+
 function rowToProduct(row: ProductRow): Product {
   return {
     id: row.id,
@@ -139,7 +145,7 @@ function rowToProduct(row: ProductRow): Product {
     description: row.description,
     category: row.category,
     priceFrom: row.price_from,
-    image: row.image_url,
+    image: normalizeLocalImageUrl(row.image_url),
     alt: row.alt,
     tags: row.tags ?? [],
   };
@@ -172,7 +178,7 @@ function inputToRow(product: CatalogProductInput) {
 function galleryRowToImage(row: GalleryImageRow): GalleryImage {
   return {
     id: row.id,
-    src: row.image_url,
+    src: normalizeLocalImageUrl(row.image_url),
     alt: row.alt,
     span: "normal",
   };
@@ -181,7 +187,7 @@ function galleryRowToImage(row: GalleryImageRow): GalleryImage {
 function galleryRowToInput(row: GalleryImageRow): GalleryImageInput {
   return {
     id: row.id,
-    src: row.image_url,
+    src: normalizeLocalImageUrl(row.image_url),
     alt: row.alt,
     active: row.active,
     sortOrder: row.sort_order,
@@ -201,7 +207,7 @@ function instagramRowToPost(row: InstagramPostRow): InstagramPost {
   return {
     id: row.id,
     postUrl: row.post_url,
-    image: row.image_url,
+    image: normalizeLocalImageUrl(row.image_url),
     alt: row.alt,
     caption: row.caption,
   };
@@ -233,7 +239,7 @@ function reviewRowToReview(row: CustomerReviewRow): CustomerReview {
     event: row.event_name,
     text: row.review_text,
     rating: row.rating,
-    image: row.image_url,
+    image: normalizeLocalImageUrl(row.image_url),
     alt: row.alt,
   };
 }

@@ -4,6 +4,10 @@ import { ChevronLeft, ChevronRight, Images } from "lucide-react";
 import { galleryImages as fallbackGalleryImages } from "./data/products";
 import type { GalleryImage } from "../services/catalog";
 
+function getFallbackImage(index: number) {
+  return fallbackGalleryImages[index % fallbackGalleryImages.length]?.src ?? "/instagram/post-02.webp";
+}
+
 export function Gallery() {
   const [images, setImages] = useState<GalleryImage[]>(fallbackGalleryImages);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -41,6 +45,14 @@ export function Gallery() {
 
   function goTo(index: number) {
     setActiveIndex((index + images.length) % images.length);
+  }
+
+  function handleImageError(event: React.SyntheticEvent<HTMLImageElement>, index: number) {
+    const fallbackSrc = getFallbackImage(index);
+    const currentSrc = event.currentTarget.getAttribute("src");
+
+    if (currentSrc === fallbackSrc) return;
+    event.currentTarget.src = fallbackSrc;
   }
 
   if (!activeImage) return null;
@@ -86,7 +98,13 @@ export function Gallery() {
                 exit={{ opacity: 0, scale: 0.98, x: -24 }}
                 transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
               >
-                <img src={activeImage.src} alt={activeImage.alt} className="h-full w-full object-cover" loading="lazy" />
+                <img
+                  src={activeImage.src}
+                  alt={activeImage.alt}
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                  onError={(event) => handleImageError(event, activeIndex)}
+                />
                 <figcaption>
                   <span>Casa Dolce</span>
                   <strong>{activeImage.alt}</strong>
@@ -113,7 +131,7 @@ export function Gallery() {
                 onClick={() => goTo(index)}
                 aria-label={`Ver ${image.alt}`}
               >
-                <img src={image.src} alt="" loading="lazy" />
+                <img src={image.src} alt="" loading="lazy" onError={(event) => handleImageError(event, index)} />
               </button>
             ))}
           </div>
@@ -122,7 +140,7 @@ export function Gallery() {
             <div className="flavor-marquee__track">
               {marqueeImages.map((image, index) => (
                 <figure key={`${image.id}-${index}`}>
-                  <img src={image.src} alt="" loading="lazy" />
+                  <img src={image.src} alt="" loading="lazy" onError={(event) => handleImageError(event, index)} />
                 </figure>
               ))}
             </div>
