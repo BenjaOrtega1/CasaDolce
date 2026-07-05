@@ -59,7 +59,7 @@ export function Testimonials() {
                 {testimonial.image ? (
                   <img
                     src={testimonial.image}
-                    alt={testimonial.alt || `Foto de resena enviada por ${testimonial.name}`}
+                    alt={testimonial.alt || `Foto de reseña enviada por ${testimonial.name}`}
                     loading="lazy"
                     className="testimonial-card__image"
                   />

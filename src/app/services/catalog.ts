@@ -339,7 +339,7 @@ export async function getPublicProducts(): Promise<Product[]> {
     .order("id", { ascending: true });
 
   if (error) {
-    console.warn("No se pudo cargar el catalogo desde Supabase.", error);
+    console.warn("No se pudo cargar el catálogo desde Supabase.", error);
     return [];
   }
 

@@ -18,14 +18,14 @@ export const instagramPosts: InstagramPost[] = [
     id: 2,
     postUrl: "https://www.instagram.com/p/DWPXaPRD2a6/",
     image: "/instagram/post-02.webp",
-    alt: "Preparacion dulce artesanal de Casa Dolce",
-    caption: "Detalle dulce para celebracion",
+    alt: "Preparación dulce artesanal de Casa Dolce",
+    caption: "Detalle dulce para celebración",
   },
   {
     id: 3,
     postUrl: "https://www.instagram.com/p/DY8NjkmvuBO/",
     image: "/instagram/post-03.webp",
-    alt: "Pasteleria artesanal publicada por Casa Dolce",
+    alt: "Pastelería artesanal publicada por Casa Dolce",
     caption: "Pedido especial Casa Dolce",
   },
   {
@@ -39,8 +39,8 @@ export const instagramPosts: InstagramPost[] = [
     id: 5,
     postUrl: "https://www.instagram.com/p/C2iAMZZu6jP/?img_index=1",
     image: "/instagram/post-05.webp",
-    alt: "Decoracion de pasteleria hecha a mano",
-    caption: "Decoracion delicada hecha a mano",
+    alt: "Decoración de pastelería hecha a mano",
+    caption: "Decoración delicada hecha a mano",
   },
   {
     id: 6,
@@ -88,7 +88,7 @@ export const instagramPosts: InstagramPost[] = [
     id: 12,
     postUrl: "https://www.instagram.com/p/C2h_mIbuUh2/",
     image: "/instagram/post-12.webp",
-    alt: "Pasteleria artesanal para celebracion",
+    alt: "Pastelería artesanal para celebración",
     caption: "Hecho a mano para celebrar",
   },
 ];

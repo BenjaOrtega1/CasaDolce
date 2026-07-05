@@ -33,13 +33,13 @@ export default function App() {
 
   if (route === "#admin") {
     content = (
-      <Suspense fallback={<div className="admin-page">Cargando administracion...</div>}>
+      <Suspense fallback={<div className="admin-page">Cargando administración...</div>}>
         <AdminCatalog />
       </Suspense>
     );
   } else if (route.startsWith("#resena")) {
     content = (
-      <Suspense fallback={<div className="review-page">Cargando formulario de resena...</div>}>
+      <Suspense fallback={<div className="review-page">Cargando formulario de reseña...</div>}>
         <ReviewForm />
       </Suspense>
     );

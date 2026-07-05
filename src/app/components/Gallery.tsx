@@ -70,7 +70,7 @@ export function Gallery() {
           <h2>Galeria de sabores</h2>
           <p>
             Texturas, flores, glace y terminaciones delicadas para imaginar el estilo
-            de tu proximo pedido.
+            de tu próximo pedido.
           </p>
         </motion.div>
 

@@ -54,7 +54,7 @@ export function InstagramFeed() {
               target="_blank"
               rel="noreferrer"
               className="instagram-post group aspect-square overflow-hidden rounded-2xl bg-secondary/40"
-              aria-label={`${post.caption}. Ver publicacion en Instagram`}
+              aria-label={`${post.caption}. Ver publicación en Instagram`}
               initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
@@ -73,7 +73,7 @@ export function InstagramFeed() {
                 transition={{ duration: 0.22, ease: "easeOut" }}
               >
                 <Instagram className="size-9" aria-hidden="true" />
-                <strong>Ver publicacion</strong>
+                <strong>Ver publicación</strong>
               </motion.div>
             </motion.a>
           ))}

@@ -14,12 +14,12 @@ export interface HeroSettings {
 export const defaultHeroSettings: HeroSettings = {
   image: "/instagram/post-02.webp",
   imageAlt: "Torta artesanal Casa Dolce con frutos rojos y crema",
-  badge: "Pasteleria artesanal",
+  badge: "Pastelería artesanal",
   title: "Dulzura\nartesanal\npara\nmomentos\ninolvidables",
-  lead: "Tortas, mesas dulces y detalles personalizados hechos con dedicacion, estetica y sabor.",
+  lead: "Tortas, mesas dulces y detalles personalizados hechos con dedicación, estética y sabor.",
   captionLabel: "Especialidad de la casa",
   captionTitle: "Torta artesanal con frutos rojos",
   primaryCtaLabel: "Cotizar por WhatsApp",
-  whatsappMessage: "Hola Casa Dolce! Me gustaria cotizar una torta o mesa dulce personalizada.",
-  secondaryCtaLabel: "Ver catalogo",
+  whatsappMessage: "Hola Casa Dolce! Me gustaría cotizar una torta o mesa dulce personalizada.",
+  secondaryCtaLabel: "Ver catálogo",
 };

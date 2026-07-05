@@ -29,7 +29,7 @@ function getReviewToken() {
 
 async function uploadReviewImage(file: File, nameSeed: string, token: string) {
   if (!supabase) throw new Error("El formulario no esta disponible.");
-  if (!file.type.startsWith("image/")) throw new Error("Selecciona una imagen valida.");
+  if (!file.type.startsWith("image/")) throw new Error("Selecciona una imagen válida.");
 
   const webpBlob = await convertImageToWebp(file, 1400, 0.84);
   const baseName = slugify(nameSeed || file.name.replace(/\.[^.]+$/, "")) || "resena";
@@ -113,7 +113,7 @@ export function ReviewForm() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!isValid) {
-      setMessage("Completa tu nombre, resena y estrellas.");
+      setMessage("Completa tu nombre, reseña y estrellas.");
       return;
     }
 
@@ -130,7 +130,7 @@ export function ReviewForm() {
       setForm(initialForm);
       setPreview("");
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "No se pudo enviar la resena.");
+      setMessage(error instanceof Error ? error.message : "No se pudo enviar la reseña.");
     } finally {
       setSaving(false);
     }
@@ -141,8 +141,8 @@ export function ReviewForm() {
       <main className="review-page">
         <section className="review-card review-card--compact">
           <img src="/logocasadolce.webp" alt={siteConfig.name} className="review-logo" />
-          <h1>Resenas no disponibles</h1>
-          <p>El formulario de resenas no esta disponible en este momento.</p>
+          <h1>Reseñas no disponibles</h1>
+          <p>El formulario de reseñas no esta disponible en este momento.</p>
         </section>
       </main>
     );
@@ -154,7 +154,7 @@ export function ReviewForm() {
         <section className="review-card review-card--compact">
           <img src="/logocasadolce.webp" alt={siteConfig.name} className="review-logo" />
           <h1>Validando link</h1>
-          <p>Estamos revisando que esta invitacion de resena este disponible.</p>
+          <p>Estamos revisando que esta invitacion de reseña este disponible.</p>
         </section>
       </main>
     );
@@ -183,18 +183,18 @@ export function ReviewForm() {
         <div className="review-card__intro">
           <img src="/logocasadolce.webp" alt={siteConfig.name} className="review-logo" />
           <span>Casa Dolce</span>
-          <h1>Cuentanos como estuvo tu pedido</h1>
+          <h1>Cuéntanos cómo estuvo tu pedido</h1>
           <p>
-            Tu resena ayuda a otras personas a imaginar su celebracion. Este link se puede usar una sola vez
-            y la resena se publicara despues de ser revisada.
+            Tu reseña ayuda a otras personas a imaginar su celebración. Este link se puede usar una sola vez
+            y la reseña se publicará después de ser revisada.
           </p>
         </div>
 
         {sent ? (
           <div className="review-success">
             <CheckCircle className="size-14" aria-hidden="true" />
-            <h2>Gracias por tu resena</h2>
-            <p>La recibimos correctamente. Casa Dolce la revisara antes de publicarla.</p>
+            <h2>Gracias por tu reseña</h2>
+            <p>La recibimos correctamente. Casa Dolce la revisará antes de publicarla.</p>
           </div>
         ) : (
           <form className="review-form" onSubmit={handleSubmit}>
@@ -215,13 +215,13 @@ export function ReviewForm() {
                   id="review-event"
                   value={form.event}
                   onChange={(event) => setForm({ ...form, event: event.target.value })}
-                  placeholder="Cumpleanos, baby shower, torta personalizada..."
+                  placeholder="Cumpleaños, baby shower, torta personalizada..."
                 />
               </div>
             </div>
 
             <fieldset className="review-stars">
-              <legend>Cuantas estrellas le das?</legend>
+              <legend>¿Cuántas estrellas le das?</legend>
               <div>
                 {[1, 2, 3, 4, 5].map((rating) => (
                   <button
@@ -238,13 +238,13 @@ export function ReviewForm() {
             </fieldset>
 
             <div className="field-group">
-              <Label htmlFor="review-text">Resena *</Label>
+              <Label htmlFor="review-text">Reseña *</Label>
               <Textarea
                 id="review-text"
                 value={form.text}
                 onChange={(event) => setForm({ ...form, text: event.target.value })}
                 rows={5}
-                placeholder="Cuentanos que te gusto del sabor, presentacion, atencion o entrega..."
+                placeholder="Cuéntanos qué te gustó del sabor, presentación, atención o entrega..."
                 required
               />
             </div>
@@ -262,9 +262,9 @@ export function ReviewForm() {
               </label>
               <figure className="review-image-preview">
                 {form.image ? (
-                  <img src={preview || form.image} alt={form.alt || "Vista previa de la foto de resena"} />
+                  <img src={preview || form.image} alt={form.alt || "Vista previa de la foto de reseña"} />
                 ) : (
-                  <figcaption>Si subes una imagen, aparecera aqui</figcaption>
+                  <figcaption>Si subes una imagen, aparecerá aquí</figcaption>
                 )}
               </figure>
             </div>
@@ -272,7 +272,7 @@ export function ReviewForm() {
             {message ? <p className="admin-message">{message}</p> : null}
 
             <Button className="btn-primary h-12 w-full text-base" type="submit" disabled={saving || uploading}>
-              {saving ? "Enviando resena..." : "Enviar resena"}
+              {saving ? "Enviando reseña..." : "Enviar reseña"}
             </Button>
           </form>
         )}

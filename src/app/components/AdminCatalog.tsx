@@ -95,7 +95,7 @@ function ProductPreview({ product, tags }: { product: CatalogProductInput; tags:
   const image = product.image || "/instagram/post-02.webp";
   const title = product.name || "Nombre del producto";
   const description =
-    product.description || "Descripcion breve del producto, pensada para verse igual que en el catalogo digital.";
+    product.description || "Descripción breve del producto, pensada para verse igual que en el catálogo digital.";
 
   return (
     <article className="product-card admin-preview-card">
@@ -142,16 +142,16 @@ function InstagramPreview({ post }: { post: InstagramPostInput }) {
       target="_blank"
       rel="noreferrer"
       className="instagram-post admin-instagram-preview group aspect-square overflow-hidden rounded-2xl bg-secondary/40"
-      aria-label={post.caption || "Vista previa de publicacion de Instagram"}
+      aria-label={post.caption || "Vista previa de publicación de Instagram"}
     >
       <img
         src={post.image || "/instagram/post-01.webp"}
-        alt={post.alt || post.caption || "Publicacion de Instagram Casa Dolce"}
+        alt={post.alt || post.caption || "Publicación de Instagram Casa Dolce"}
         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
       <span className="instagram-post__overlay">
         <Instagram className="size-9" aria-hidden="true" />
-        <strong>Ver publicacion</strong>
+        <strong>Ver publicación</strong>
       </span>
     </a>
   );
@@ -247,6 +247,10 @@ export function AdminCatalog() {
     () => reviews.find((review) => review.id === selectedReviewId),
     [reviews, selectedReviewId],
   );
+  const pendingReviews = useMemo(
+    () => reviews.filter((review) => !review.active),
+    [reviews],
+  );
   const pendingReviewInvites = useMemo(
     () => reviewInvites.filter((invite) => !invite.usedAt),
     [reviewInvites],
@@ -316,7 +320,7 @@ export function AdminCatalog() {
             ? galleryResult.reason
             : null;
     if (mainError) {
-      setMessage(mainError instanceof Error ? mainError.message : "No se pudo cargar la informacion.");
+      setMessage(mainError instanceof Error ? mainError.message : "No se pudo cargar la información.");
     }
 
     setLoading(false);
@@ -365,7 +369,7 @@ export function AdminCatalog() {
 
   async function uploadWebp(file: File, bucket: string, nameSeed: string) {
     if (!supabase) throw new Error("Supabase no esta configurado.");
-    if (!file.type.startsWith("image/")) throw new Error("Selecciona una imagen valida.");
+    if (!file.type.startsWith("image/")) throw new Error("Selecciona una imagen válida.");
 
     const webpBlob = await convertImageToWebp(file);
     const baseName = slugify(nameSeed || file.name.replace(/\.[^.]+$/, "")) || "imagen";
@@ -472,7 +476,7 @@ export function AdminCatalog() {
       setInstagramForm((current) => ({
         ...current,
         image: url,
-        alt: current.alt || current.caption || "Publicacion de Instagram Casa Dolce",
+        alt: current.alt || current.caption || "Publicación de Instagram Casa Dolce",
       }));
       setMessage("Imagen de Instagram subida.");
     } catch (error) {
@@ -582,18 +586,18 @@ export function AdminCatalog() {
     setMessage("");
 
     try {
-      const caption = instagramForm.caption.trim() || "Publicacion Casa Dolce";
+      const caption = instagramForm.caption.trim() || "Publicación Casa Dolce";
       await saveInstagramPost({
         ...instagramForm,
         caption,
         alt: instagramForm.alt.trim() || caption,
         postUrl: instagramForm.postUrl.trim(),
       });
-      setMessage("Publicacion de Instagram guardada.");
+      setMessage("Publicación de Instagram guardada.");
       startNewInstagramPost();
       await refreshAll();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "No se pudo guardar la publicacion.");
+      setMessage(error instanceof Error ? error.message : "No se pudo guardar la publicación.");
     } finally {
       setLoading(false);
     }
@@ -659,7 +663,7 @@ export function AdminCatalog() {
       !id ||
       !(await dialog.confirm({
         title: "Eliminar producto",
-        description: "Esta accion quitara el producto del catalogo. No se puede deshacer.",
+        description: "Esta acción quitará el producto del catálogo. No se puede deshacer.",
         confirmLabel: "Eliminar producto",
         tone: "danger",
       }))
@@ -685,7 +689,7 @@ export function AdminCatalog() {
       !id ||
       !(await dialog.confirm({
         title: "Eliminar imagen del carrusel",
-        description: "La imagen dejara de mostrarse en la galeria de sabores.",
+        description: "La imagen dejará de mostrarse en la galería de sabores.",
         confirmLabel: "Eliminar imagen",
         tone: "danger",
       }))
@@ -710,9 +714,9 @@ export function AdminCatalog() {
     if (
       !id ||
       !(await dialog.confirm({
-        title: "Eliminar publicacion",
-        description: "Esta publicacion dejara de aparecer en el feed de Instagram de la web.",
-        confirmLabel: "Eliminar publicacion",
+        title: "Eliminar publicación",
+        description: "Esta publicación dejará de aparecer en el feed de Instagram de la web.",
+        confirmLabel: "Eliminar publicación",
         tone: "danger",
       }))
     ) {
@@ -722,11 +726,11 @@ export function AdminCatalog() {
     setMessage("");
     try {
       await deleteInstagramPost(id);
-      setMessage("Publicacion de Instagram eliminada.");
+      setMessage("Publicación de Instagram eliminada.");
       startNewInstagramPost();
       await refreshAll();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "No se pudo eliminar la publicacion.");
+      setMessage(error instanceof Error ? error.message : "No se pudo eliminar la publicación.");
     } finally {
       setLoading(false);
     }
@@ -736,9 +740,9 @@ export function AdminCatalog() {
     if (
       !id ||
       !(await dialog.confirm({
-        title: "Eliminar resena",
-        description: "Esta resena dejara de mostrarse como testimonio en el sitio.",
-        confirmLabel: "Eliminar resena",
+        title: "Eliminar reseña",
+        description: "Esta reseña dejará de mostrarse como testimonio en el sitio.",
+        confirmLabel: "Eliminar reseña",
         tone: "danger",
       }))
     ) {
@@ -778,14 +782,14 @@ export function AdminCatalog() {
       <main className="admin-page">
         <form className="admin-card admin-card--narrow" onSubmit={handleLogin}>
           <img src="/logocasadolce.webp" alt="Casa Dolce" className="admin-logo" />
-          <h1>Administrar catalogo</h1>
+          <h1>Administrar catálogo</h1>
           <p></p>
           <label>
             Email
             <input value={email} onChange={(event) => setEmail(event.target.value)} type="email" required />
           </label>
           <label>
-            Contrasena
+            Contraseña
             <input value={password} onChange={(event) => setPassword(event.target.value)} type="password" required />
           </label>
           {message && <p className="admin-message">{message}</p>}
@@ -805,9 +809,9 @@ export function AdminCatalog() {
             <p>Casa Dolce</p>
             <h1>
               {panel === "hero"
-                ? "Hero principal"
+                ? "Imagen principal"
                 : panel === "products"
-                ? "Catalogo digital"
+                ? "Catálogo digital"
                 : panel === "gallery"
                   ? "Carrusel de sabores"
                   : panel === "instagram"
@@ -847,11 +851,27 @@ export function AdminCatalog() {
           <button type="button" className={panel === "reviews" ? "is-active" : ""} onClick={() => setPanel("reviews")}>
             <Star className="size-4" aria-hidden="true" />
             Reseñas
+            {pendingReviews.length > 0 && <small className="admin-tab-badge">{pendingReviews.length}</small>}
           </button>
         </div>
 
+        {pendingReviews.length > 0 && (
+          <div className="admin-review-alert admin-review-alert--global" role="status">
+            <Star className="size-4" aria-hidden="true" />
+            <div>
+              <strong>{pendingReviews.length} reseña{pendingReviews.length === 1 ? "" : "s"} pendiente{pendingReviews.length === 1 ? "" : "s"} de revisión</strong>
+              <p>Hay reseñas nuevas esperando aprobación. Revísalas y activa “Visible en testimonios” para publicarlas.</p>
+            </div>
+            {panel !== "reviews" && (
+              <Button type="button" variant="outline" className="btn-secondary" onClick={() => setPanel("reviews")}>
+                Ver reseñas
+              </Button>
+            )}
+          </div>
+        )}
+
         {panel === "hero" && (
-          <div className="admin-grid admin-grid--preview">
+          <div className="admin-grid admin-grid--hero">
             <form className="admin-form" onSubmit={handleSaveHeroSettings}>
               <div className="admin-form__section">
                 <span>Imagen principal</span>
@@ -889,7 +909,7 @@ export function AdminCatalog() {
 
               <div className="admin-form__section">
                 <span>Especial y llamados</span>
-                <div className="admin-form__row">
+                <div className="admin-form__row admin-form__row--hero">
                   <label>
                     Etiqueta de imagen
                     <input value={heroForm.captionLabel} onChange={(event) => setHeroForm({ ...heroForm, captionLabel: event.target.value })} required />
@@ -899,7 +919,7 @@ export function AdminCatalog() {
                     <input value={heroForm.captionTitle} onChange={(event) => setHeroForm({ ...heroForm, captionTitle: event.target.value })} required />
                   </label>
                 </div>
-                <div className="admin-form__row">
+                <div className="admin-form__row admin-form__row--hero">
                   <label>
                     Boton WhatsApp
                     <input value={heroForm.primaryCtaLabel} onChange={(event) => setHeroForm({ ...heroForm, primaryCtaLabel: event.target.value })} required />
@@ -968,7 +988,7 @@ export function AdminCatalog() {
                   </label>
                 </div>
                 <label>
-                  Descripcion
+                  Descripción
                   <textarea value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} required />
                 </label>
                 <div className="admin-form__row">
@@ -1002,7 +1022,7 @@ export function AdminCatalog() {
               </div>
 
               <div className="admin-form__section">
-                <span>Publicacion</span>
+                <span>Publicación</span>
                 <label>
                   Tags separados por coma
                   <input value={tagsText} onChange={(event) => setTagsText(event.target.value)} />
@@ -1010,7 +1030,7 @@ export function AdminCatalog() {
                 <div className="admin-checks">
                   <label>
                     <input checked={form.active} onChange={(event) => setForm({ ...form, active: event.target.checked })} type="checkbox" />
-                    Visible en el catalogo
+                    Visible en el catálogo
                   </label>
                   <label>
                     <input checked={form.featured} onChange={(event) => setForm({ ...form, featured: event.target.checked })} type="checkbox" />
@@ -1037,7 +1057,7 @@ export function AdminCatalog() {
             <aside className="admin-preview">
               <div className="admin-preview__header">
                 <span>Vista previa</span>
-                <p>Asi se vera en el catalogo digital.</p>
+                <p>Así se verá en el catálogo digital.</p>
               </div>
               <ProductPreview product={form} tags={previewTags} />
             </aside>
@@ -1058,7 +1078,7 @@ export function AdminCatalog() {
                   className={`admin-list__item ${selectedGalleryId === image.id ? "is-active" : ""}`}
                   onClick={() => setSelectedGalleryId(image.id ?? "new")}
                 >
-                  <span>{image.alt || "Imagen sin titulo"}</span>
+                  <span>{image.alt || "Imagen sin título"}</span>
                   {!image.active && <small>Oculta</small>}
                 </button>
               ))}
@@ -1114,7 +1134,7 @@ export function AdminCatalog() {
             <aside className="admin-preview">
               <div className="admin-preview__header">
                 <span>Vista previa</span>
-                <p>Asi se vera dentro del carrusel.</p>
+                <p>Así se verá dentro del carrusel.</p>
               </div>
               <GalleryPreview image={galleryForm} />
             </aside>
@@ -1126,7 +1146,7 @@ export function AdminCatalog() {
             <aside className="admin-list">
               <button type="button" className={`admin-list__item ${selectedInstagramId === "new" ? "is-active" : ""}`} onClick={startNewInstagramPost}>
                 <Plus className="size-4" aria-hidden="true" />
-                Nueva publicacion
+                Nueva publicación
               </button>
               {instagramPosts.map((post) => (
                 <button
@@ -1135,7 +1155,7 @@ export function AdminCatalog() {
                   className={`admin-list__item ${selectedInstagramId === post.id ? "is-active" : ""}`}
                   onClick={() => setSelectedInstagramId(post.id ?? "new")}
                 >
-                  <span>{post.caption || "Publicacion sin titulo"}</span>
+                  <span>{post.caption || "Publicación sin título"}</span>
                   {!post.active && <small>Oculta</small>}
                 </button>
               ))}
@@ -1143,7 +1163,7 @@ export function AdminCatalog() {
 
             <form className="admin-form" onSubmit={handleSaveInstagramPost}>
               <div className="admin-form__section">
-                <span>Publicacion</span>
+                <span>Publicación</span>
                 <label>
                   Link de Instagram
                   <input
@@ -1164,7 +1184,7 @@ export function AdminCatalog() {
                         alt: instagramForm.alt || event.target.value,
                       })
                     }
-                    placeholder="Torta personalizada para celebracion"
+                    placeholder="Torta personalizada para celebración"
                     required
                   />
                 </label>
@@ -1217,7 +1237,7 @@ export function AdminCatalog() {
               <div className="admin-actions">
                 <Button className="btn-primary" type="submit" disabled={loading || uploading}>
                   <Save className="size-4" aria-hidden="true" />
-                  Guardar publicacion
+                  Guardar publicación
                 </Button>
                 {instagramForm.id && (
                   <Button type="button" variant="outline" className="btn-secondary" onClick={() => handleDeleteInstagramPost(instagramForm.id)}>
@@ -1231,7 +1251,7 @@ export function AdminCatalog() {
             <aside className="admin-preview">
               <div className="admin-preview__header">
                 <span>Vista previa</span>
-                <p>Asi se vera en la grilla de Instagram.</p>
+                <p>Así se verá en la grilla de Instagram.</p>
               </div>
               <InstagramPreview post={instagramForm} />
             </aside>
@@ -1253,11 +1273,11 @@ export function AdminCatalog() {
                 <button
                   key={review.id}
                   type="button"
-                  className={`admin-list__item ${selectedReviewId === review.id ? "is-active" : ""}`}
+                  className={`admin-list__item ${selectedReviewId === review.id ? "is-active" : ""} ${!review.active ? "has-pending-review" : ""}`}
                   onClick={() => setSelectedReviewId(review.id ?? "new")}
                 >
                   <span>{review.name || "Reseña sin nombre"}</span>
-                  {!review.active && <small>Pendiente</small>}
+                  {!review.active && <small className="admin-pending-badge">Pendiente</small>}
                 </button>
               ))}
             </aside>
@@ -1304,10 +1324,10 @@ export function AdminCatalog() {
                     return (
                       <article key={invite.id} className="admin-invite-item">
                         <div>
-                          <strong>{invite.customerName || "Invitacion sin nombre"}</strong>
+                          <strong>{invite.customerName || "Invitación sin nombre"}</strong>
                           <small>Disponible</small>
                         </div>
-                        <input value={inviteLink} readOnly onFocus={(event) => event.currentTarget.select()} aria-label="Link pendiente de resena" />
+                        <input value={inviteLink} readOnly onFocus={(event) => event.currentTarget.select()} aria-label="Link pendiente de reseña" />
                         <div className="admin-invite-item__actions">
                           <Button type="button" variant="outline" className="btn-secondary" onClick={() => copyReviewLink(inviteLink)}>
                             <Copy className="size-4" aria-hidden="true" />
